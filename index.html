@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trivo</title>
+<meta name="description" content="Sistemas de gestão, sites, landing pages e automações sob medida para pequenas e médias empresas. Tecnologia bem pensada.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&display=swap">
+<style>
+/* Layout: seções que alternam preto e claro, como no feed (escuro → claro → névoa → escuro).
+   O verde é assinatura: botões, o padrão "fluxo" do topo e detalhes. Nunca fundo. */
+:root {
+  --preto: #0B0D0C;
+  --branco: #FFFFFF;
+  --verde: #5FD068;
+  --verde-profundo: #1F9E57;
+  --verde-broto: #CAF7A6;
+  --verde-texto: #177A44;
+  --grafite: #181B19;
+  --cinza-600: #5E6560;
+  --cinza-400: #9AA19C;
+  --nevoa: #F4F6F4;
+  --linha-claro: #DCE1DD;
+  --linha-escuro: #2A2F2C;
+
+  --f-display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  /* escala: no máximo 3 tamanhos por seção */
+  --fs-hero: clamp(2.6rem, 6.4vw, 4.75rem);
+  --fs-h2: clamp(2rem, 4.2vw, 3rem);
+  --fs-title: clamp(1.35rem, 2vw, 1.55rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.875rem;
+
+  --gutter: clamp(16px, 4vw, 40px);
+  --max: 1160px;
+  --header-h: 68px;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--preto);
+  color: var(--preto);
+  font-family: var(--f-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--f-display); margin: 0; text-wrap: balance; }
+p { margin: 0; }
+
+.wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+
+.label {
+  font-family: var(--f-mono);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---------- Botões (módulo cápsula) ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--f-body); font-weight: 600; font-size: var(--fs-body);
+  line-height: 1; text-decoration: none; white-space: nowrap;
+  padding: 18px 28px; border-radius: 999px; border: 1.5px solid transparent;
+  cursor: pointer; transition: background-color .2s, color .2s, border-color .2s, transform .2s;
+}
+.btn svg { width: 18px; height: 18px; flex: none; transition: transform .2s; }
+.btn:hover svg { transform: translateX(3px); }
+.btn:focus-visible { outline: 2px solid var(--verde); outline-offset: 3px; }
+.btn-primary { background: var(--verde); color: var(--preto); }
+.btn-primary:hover { background: var(--verde-broto); }
+.btn-ghost { border-color: var(--linha-escuro); color: var(--branco); }
+.btn-ghost:hover { border-color: var(--cinza-400); }
+.btn-sm { font-size: var(--fs-small); padding: 11px 18px; }
+
+/* ---------- Cabeçalho ---------- */
+.site-header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: rgba(11, 13, 12, 0.88);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--linha-escuro);
+}
+.site-header .wrap {
+  height: var(--header-h);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.logo { display: inline-flex; padding-block: 8px; }
+.logo svg { height: 30px; width: auto; display: block; }
+.logo:focus-visible { outline: 2px solid var(--verde); outline-offset: 4px; border-radius: 6px; }
+.site-header nav { display: flex; align-items: center; gap: 8px; }
+
+/* ---------- Hero (escuro) ---------- */
+.hero { background: var(--preto); color: var(--branco); overflow: hidden; }
+.hero .wrap {
+  padding-block: clamp(64px, 10vw, 120px) 8px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; align-items: center;
+}
+.hero-texto { display: grid; gap: 28px; justify-items: start; min-width: 0; }
+
+/* Marca animada: cápsulas convergem, o "trivo" se desenha, o trevo pousa no "i".
+   Só translação e opacidade: o logo nunca é distorcido, girado ou recolorido. */
+.hero-marca { display: none; justify-items: center; gap: 28px; }
+.hero-marca svg { width: clamp(220px, 23vw, 300px); height: auto; display: block; overflow: visible; }
+.hero-marca .label { color: var(--cinza-400); }
+@media (min-width: 960px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr) auto; gap: clamp(48px, 6vw, 96px); }
+  .hero-marca { display: grid; padding-inline: 24px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .m-cap { animation: cap-entra .9s cubic-bezier(.2,.8,.2,1) backwards, cap-respira 5s ease-in-out 2.8s infinite; }
+  .m-cap-e { --dx: -15.6px; --dy: -9px; }
+  .m-cap-d { --dx: 15.6px; --dy: -9px; animation-delay: .12s, 2.92s; }
+  .m-cap-b { --dx: 0px; --dy: 18px; animation-delay: .24s, 3.04s; }
+  .m-traco { stroke-dasharray: 1 3; animation: traco .7s cubic-bezier(.4,0,.2,1) backwards; }
+  .m-traco:nth-child(1) { animation-delay: .75s; }
+  .m-traco:nth-child(2) { animation-delay: .83s; }
+  .m-traco:nth-child(3) { animation-delay: .91s; }
+  .m-traco:nth-child(4) { animation-delay: .99s; }
+  .m-traco:nth-child(5) { animation-delay: 1.07s; }
+  .m-traco:nth-child(6) { animation-delay: 1.15s; }
+  .m-traco:nth-child(7) { animation-delay: 1.23s; }
+  .m-trevo { animation: trevo .6s cubic-bezier(.2,.8,.2,1) 1.6s backwards; }
+  .hero-marca .label { animation: aparece .6s ease 1.9s backwards; }
+}
+@keyframes cap-entra { from { opacity: 0; transform: translate(calc(var(--dx) * 2.2), calc(var(--dy) * 2.2)); } }
+@keyframes cap-respira {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(calc(var(--dx) * .16), calc(var(--dy) * .16)); }
+}
+@keyframes traco { 0% { stroke-dashoffset: 1.2; opacity: 0; } 15% { opacity: 1; } 100% { stroke-dashoffset: 0; } }
+@keyframes trevo { from { opacity: 0; transform: translateY(-14px); } }
+@keyframes aparece { from { opacity: 0; } }
+.hero .label { color: var(--cinza-400); }
+.hero h1 {
+  font-size: var(--fs-hero); font-weight: 700; line-height: 1.02;
+  letter-spacing: -0.035em; max-width: 15ch;
+}
+.hero h1 span { color: var(--verde); }
+.hero .lead { color: var(--cinza-400); max-width: 56ch; }
+.hero .lead strong { color: var(--branco); font-weight: 500; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px; }
+.hero-note { color: var(--cinza-400); font-size: var(--fs-small); display: flex; align-items: center; gap: 10px; }
+.hero-note::before { content: ""; width: 18px; height: 8px; border-radius: 999px; background: var(--verde); flex: none; }
+
+/* Padrão "fluxo": processo (verde escuro) → resultado (verde claro). Único padrão da página. */
+.fluxo { display: block; width: 100%; height: 170px; margin-top: 24px; }
+.fluxo .grade { fill: var(--grafite); }
+.fluxo line { stroke-linecap: round; }
+@media (prefers-reduced-motion: no-preference) {
+  .fluxo.animar line { animation: entra .45s cubic-bezier(.2,.7,.2,1) backwards; }
+}
+@keyframes entra { from { opacity: 0; transform: translateY(10px); } }
+
+/* ---------- Seções: fundo único Preto Trivo em todo o site ---------- */
+.secao { padding-block: clamp(72px, 10vw, 120px); background: var(--preto); color: var(--branco); border-top: 1px solid var(--linha-escuro); }
+.secao-head { display: grid; gap: 16px; margin-bottom: clamp(40px, 6vw, 64px); }
+.secao-head .label { color: var(--cinza-400); }
+.secao-head h2 { font-size: var(--fs-h2); font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; max-width: 20ch; }
+
+/* O que fazemos */
+.servicos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(32px, 4vw, 56px); }
+.servico { display: grid; align-content: start; gap: 18px; padding-top: 28px; border-top: 1px solid var(--linha-escuro); min-width: 0; }
+.tag {
+  justify-self: start; display: inline-flex; align-items: center; gap: 10px;
+  background: var(--grafite); color: var(--branco); border: 1px solid var(--linha-escuro);
+  font-size: var(--fs-small); font-weight: 600; line-height: 1;
+  padding: 10px 16px 10px 12px; border-radius: 999px;
+}
+.tag::before { content: ""; width: 18px; height: 8px; border-radius: 999px; background: var(--verde); }
+.servico h3 { font-size: var(--fs-title); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; }
+.servico p { color: var(--cinza-400); }
+.exemplos { list-style: none; margin: 0; padding: 4px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.exemplos li {
+  font-size: var(--fs-small); font-weight: 500; line-height: 1;
+  padding: 9px 14px; border-radius: 999px; background: var(--grafite); color: var(--branco);
+}
+
+/* Como funciona */
+.etapas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; counter-reset: etapa; position: relative; }
+.etapa { display: grid; gap: 12px; align-content: start; position: relative; min-width: 0; }
+.etapa .num {
+  font-family: var(--f-mono); font-size: var(--fs-small); font-weight: 500;
+  justify-self: start; background: var(--grafite); color: var(--branco); border: 1px solid var(--linha-escuro);
+  padding: 6px 14px; border-radius: 999px; line-height: 1.2; position: relative; z-index: 1;
+  margin-bottom: 8px;
+}
+.etapa:not(:last-child)::after {
+  content: ""; position: absolute; top: 15px; left: 64px; right: -24px; height: 1px; background: var(--linha-escuro);
+}
+.etapa h3 { font-family: var(--f-body); font-size: var(--fs-body); font-weight: 700; letter-spacing: 0; }
+.etapa p { color: var(--cinza-400); }
+
+/* ---------- Orçamento (escuro) ---------- */
+.orcamento { background: var(--preto); color: var(--branco); scroll-margin-top: var(--header-h); }
+.orcamento .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(40px, 6vw, 88px); align-items: start; }
+.orcamento .secao-head { margin-bottom: 0; }
+.orcamento .secao-head .label { color: var(--cinza-400); }
+.orcamento .secao-head h2 span { color: var(--verde); }
+.orcamento .secao-head p { color: var(--cinza-400); max-width: 44ch; }
+
+.form {
+  color-scheme: dark;
+  background: var(--grafite); border: 1px solid var(--linha-escuro);
+  border-radius: 28px; padding: clamp(24px, 4vw, 40px);
+  display: grid; gap: 22px; min-width: 0;
+}
+.campo { display: grid; gap: 8px; min-width: 0; border: 0; margin: 0; padding: 0; }
+.campo > label, .campo legend { font-size: var(--fs-small); font-weight: 600; color: var(--branco); padding: 0; }
+.campo .opcional { color: var(--cinza-400); font-weight: 400; }
+.linha-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+input[type="text"], textarea {
+  width: 100%; font: inherit; color: var(--branco);
+  background: var(--preto); border: 1.5px solid var(--linha-escuro); border-radius: 14px;
+  padding: 14px 16px; transition: border-color .2s;
+}
+textarea { min-height: 128px; resize: vertical; }
+input[type="text"]::placeholder, textarea::placeholder { color: #6B726D; }
+input[type="text"]:hover, textarea:hover { border-color: #3A403C; }
+input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--verde); }
+[aria-invalid="true"] { border-color: #E5806B !important; }
+.erro { color: #F09A88; font-size: var(--fs-small); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 2px; }
+.chips input { position: absolute; opacity: 0; pointer-events: none; }
+.chips label {
+  font-size: var(--fs-small); font-weight: 500; line-height: 1; cursor: pointer;
+  padding: 11px 16px; border-radius: 999px; border: 1.5px solid var(--linha-escuro); color: var(--branco);
+  transition: background-color .2s, border-color .2s, color .2s;
+}
+.chips label:hover { border-color: var(--cinza-400); }
+.chips input:checked + label { background: var(--verde); border-color: var(--verde); color: var(--preto); font-weight: 600; }
+.chips input:focus-visible + label { outline: 2px solid var(--verde); outline-offset: 3px; }
+
+.form-rodape { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-top: 4px; }
+.form-rodape .btn { border: 0; }
+.form-rodape small { color: var(--cinza-400); font-size: var(--fs-small); }
+.status {
+  border: 1px solid var(--linha-escuro); border-radius: 18px; padding: 16px 18px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+  color: var(--cinza-400); font-size: var(--fs-small);
+}
+.status strong { color: var(--branco); font-weight: 600; display: block; }
+.status a, .status button { color: var(--verde); font: inherit; font-weight: 600; text-underline-offset: 3px; }
+.status button { background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+.status-acoes { display: flex; gap: 16px; flex-wrap: wrap; }
+.status-msg { flex-basis: 100%; white-space: pre-wrap; color: var(--branco); background: var(--preto); border-radius: 12px; padding: 12px 14px; user-select: all; }
+
+/* ---------- Rodapé ---------- */
+.site-footer { background: var(--preto); color: var(--cinza-400); border-top: 1px solid var(--linha-escuro); }
+.site-footer .wrap { padding-block: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 40px; font-size: var(--fs-small); }
+.assinatura { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.assinatura .logo svg { height: 26px; }
+.site-footer nav { display: flex; gap: 24px; }
+.site-footer nav a { text-decoration: none; color: var(--branco); }
+.site-footer nav a:hover { color: var(--verde); }
+.site-footer a:focus-visible { outline: 2px solid var(--verde); outline-offset: 3px; border-radius: 4px; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 900px) {
+  .servicos { grid-template-columns: minmax(0, 1fr); }
+  .etapas { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
+  .etapa:nth-child(2)::after { display: none; }
+  .orcamento .wrap { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  :root { --header-h: 60px; }
+  .logo svg { height: 24px; }
+  .etapas { grid-template-columns: minmax(0, 1fr); }
+  .etapa::after { display: none; }
+  .linha-2 { grid-template-columns: minmax(0, 1fr); }
+  .hero-actions .btn { flex: 1 1 auto; justify-content: center; }
+  .fluxo { height: 130px; }
+}
+@media (max-width: 400px) {
+  .site-header .btn-sm { padding: 10px 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .btn, .btn svg { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="#topo" aria-label="Trivo, início">
+      <svg viewBox="0 0 386 104" aria-hidden="true"><g transform="translate(-3.1 -2.5) scale(0.966)" fill="none" stroke-width="22" stroke-linecap="round"><path d="M54 66V93" stroke="#CAF7A6"/><path d="M40.1 42L14.2 27" stroke="#1F9E57"/><path d="M67.9 42L93.8 27" stroke="#5FD068"/></g><g transform="translate(128 0)" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"><path d="M21 20V72a18 18 0 0 0 18 18h3"/><path d="M7 40H39"/><path d="M65 40V90"/><path d="M65 62a22 22 0 0 1 22-22"/><path d="M109 40V90"/><path d="M132 40L155 90L178 40"/><circle cx="225" cy="65" r="26"/></g><g transform="translate(237 15) scale(0.5)" fill="#CAF7A6"><path d="M0 0V24" fill="none" stroke="#CAF7A6" stroke-width="6.5" stroke-linecap="round"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z" transform="rotate(120)"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z" transform="rotate(240)"/></g></svg>
+    </a>
+    <nav aria-label="Principal">
+      <a class="btn btn-ghost btn-sm" href="portfolio.html">Portfólio</a>
+      <a class="btn btn-primary btn-sm" href="#orcamento">Pedir orçamento</a>
+    </nav>
+  </div>
+</header>
+
+<main id="topo">
+
+  <section class="hero" aria-labelledby="hero-titulo">
+    <div class="wrap">
+      <div class="hero-texto">
+      <p class="label">Trivo · Sites e sistemas</p>
+      <h1 id="hero-titulo">Seu processo é complicado. <span>O sistema não precisa ser.</span></h1>
+      <p class="lead">Sistemas de gestão, sites e automações sob medida para pequenas e médias empresas. <strong>Você explica como o seu negócio funciona. A gente transforma isso em uma ferramenta simples de usar.</strong></p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#orcamento">Pedir orçamento
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="portfolio.html">Ver portfólio</a>
+      </div>
+      <p class="hero-note">Orçamento sem compromisso, direto pelo WhatsApp.</p>
+      </div>
+      <div class="hero-marca" aria-hidden="true">
+        <svg viewBox="0 0 258 300" focusable="false">
+          <g transform="translate(37.2 -23.2) scale(1.7)" fill="none" stroke-width="22" stroke-linecap="round">
+            <path class="m-cap m-cap-e" d="M40.1 42L14.2 27" stroke="#1F9E57"/>
+            <path class="m-cap m-cap-d" d="M67.9 42L93.8 27" stroke="#5FD068"/>
+            <path class="m-cap m-cap-b" d="M54 66V93" stroke="#CAF7A6"/>
+          </g>
+          <g transform="translate(0 200)" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+            <path class="m-traco" pathLength="1" d="M21 20V72a18 18 0 0 0 18 18h3"/>
+            <path class="m-traco" pathLength="1" d="M7 40H39"/>
+            <path class="m-traco" pathLength="1" d="M65 40V90"/>
+            <path class="m-traco" pathLength="1" d="M65 62a22 22 0 0 1 22-22"/>
+            <path class="m-traco" pathLength="1" d="M109 40V90"/>
+            <path class="m-traco" pathLength="1" d="M132 40L155 90L178 40"/>
+            <circle class="m-traco" pathLength="1" cx="225" cy="65" r="26"/>
+          </g>
+          <g class="m-trevo">
+            <g transform="translate(109 215) scale(0.5)" fill="#CAF7A6"><path d="M0 0V24" fill="none" stroke="#CAF7A6" stroke-width="6.5" stroke-linecap="round"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z" transform="rotate(120)"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z" transform="rotate(240)"/></g>
+          </g>
+        </svg>
+        <p class="label">Tecnologia bem pensada.</p>
+      </div>
+    </div>
+    <svg class="fluxo animar" id="fluxo" aria-hidden="true" focusable="false">
+      <defs>
+        <pattern id="grade" width="38" height="46" patternUnits="userSpaceOnUse">
+          <rect class="grade" x="13" y="10" width="12" height="26" rx="6"/>
+        </pattern>
+        <linearGradient id="esmaece" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+          <stop offset=".3" stop-color="#fff" stop-opacity="1"/>
+          <stop offset=".7" stop-color="#fff" stop-opacity="1"/>
+          <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="mascara"><rect width="100%" height="100%" fill="url(#esmaece)"/></mask>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grade)" mask="url(#mascara)"/>
+      <g id="fluxo-linha"></g>
+    </svg>
+  </section>
+
+  <section class="secao" aria-labelledby="servicos-titulo">
+    <div class="wrap">
+      <div class="secao-head">
+        <p class="label">O que fazemos</p>
+        <h2 id="servicos-titulo">Complexo por trás. Simples na sua tela.</h2>
+      </div>
+      <div class="servicos">
+        <article class="servico">
+          <span class="tag">Sistemas de gestão</span>
+          <h3>Pedidos, estoque e financeiro no mesmo lugar.</h3>
+          <p>Um sistema do jeito que a sua empresa trabalha. Sem planilha espalhada, sem informação perdida.</p>
+          <ul class="exemplos" aria-label="Exemplos">
+            <li>Pedidos</li><li>Estoque</li><li>Financeiro</li><li>Aplicações web</li>
+          </ul>
+        </article>
+        <article class="servico">
+          <span class="tag">Sites e landing pages</span>
+          <h3>Um site que trabalha por você.</h3>
+          <p>Rápido, bonito no celular e feito para transformar visitas em contatos.</p>
+          <ul class="exemplos" aria-label="Exemplos">
+            <li>Site institucional</li><li>Landing page</li><li>Página de produto</li>
+          </ul>
+        </article>
+        <article class="servico">
+          <span class="tag">Automações</span>
+          <h3>Menos tarefas repetidas. Mais tempo para vender.</h3>
+          <p>Avisos, cadastros e relatórios que acontecem sozinhos, para a sua equipe focar no que importa.</p>
+          <ul class="exemplos" aria-label="Exemplos">
+            <li>Avisos</li><li>Cadastros</li><li>Relatórios</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao" aria-labelledby="etapas-titulo">
+    <div class="wrap">
+      <div class="secao-head">
+        <p class="label">Como funciona</p>
+        <h2 id="etapas-titulo">Do problema à solução, sem complicar.</h2>
+      </div>
+      <ol class="etapas">
+        <li class="etapa">
+          <span class="num">01</span>
+          <h3>Entender</h3>
+          <p>Conversamos para entender como a sua empresa funciona hoje.</p>
+        </li>
+        <li class="etapa">
+          <span class="num">02</span>
+          <h3>Desenhar</h3>
+          <p>Planejamos a solução com você, antes de qualquer código.</p>
+        </li>
+        <li class="etapa">
+          <span class="num">03</span>
+          <h3>Construir</h3>
+          <p>Desenvolvemos e você acompanha cada etapa do projeto.</p>
+        </li>
+        <li class="etapa">
+          <span class="num">04</span>
+          <h3>Evoluir</h3>
+          <p>Depois da entrega, ajustamos e melhoramos com o uso.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="secao orcamento" id="orcamento" aria-labelledby="orcamento-titulo">
+    <div class="wrap">
+      <div class="secao-head">
+        <p class="label">Orçamento</p>
+        <h2 id="orcamento-titulo">Conte o seu desafio. <span>A gente responde com um caminho.</span></h2>
+        <p>Preencha o básico e envie pelo WhatsApp. Sem compromisso e sem termos técnicos: explique do seu jeito.</p>
+      </div>
+
+      <form class="form" id="form-orcamento" novalidate>
+        <div class="linha-2">
+          <div class="campo">
+            <label for="nome">Seu nome</label>
+            <input type="text" id="nome" name="nome" autocomplete="name" placeholder="Como podemos te chamar?" aria-describedby="nome-erro">
+            <span class="erro" id="nome-erro" hidden>Escreva o seu nome para a gente saber com quem fala.</span>
+          </div>
+          <div class="campo">
+            <label for="empresa">Empresa <span class="opcional">(opcional)</span></label>
+            <input type="text" id="empresa" name="empresa" autocomplete="organization" placeholder="Nome do negócio">
+          </div>
+        </div>
+
+        <fieldset class="campo">
+          <legend>Do que você precisa?</legend>
+          <div class="chips">
+            <input type="radio" name="tipo" id="tipo-sistema" value="Sistema de gestão"><label for="tipo-sistema">Sistema de gestão</label>
+            <input type="radio" name="tipo" id="tipo-site" value="Site ou landing page"><label for="tipo-site">Site ou landing page</label>
+            <input type="radio" name="tipo" id="tipo-automacao" value="Automação"><label for="tipo-automacao">Automação</label>
+            <input type="radio" name="tipo" id="tipo-nao-sei" value="Ainda não sei" checked><label for="tipo-nao-sei">Ainda não sei</label>
+          </div>
+        </fieldset>
+
+        <div class="campo">
+          <label for="mensagem">Qual é o desafio?</label>
+          <textarea id="mensagem" name="mensagem" placeholder="Ex.: controlamos os pedidos em planilhas e sempre perdemos alguma coisa." aria-describedby="mensagem-erro"></textarea>
+          <span class="erro" id="mensagem-erro" hidden>Conte em poucas palavras o que você quer resolver.</span>
+        </div>
+
+        <div class="form-rodape">
+          <button class="btn btn-primary" type="submit">Enviar pelo WhatsApp
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <small id="dica-envio">A mensagem é copiada com os seus dados. No WhatsApp, é só colar e enviar.</small>
+        </div>
+
+        <div class="status" id="status" role="status" hidden>
+          <span id="status-texto"></span>
+          <span class="status-acoes">
+            <button type="button" id="status-copiar">Copiar mensagem</button>
+            <a id="status-link" href="#" target="_blank" rel="noopener">Abrir WhatsApp</a>
+          </span>
+          <span class="status-msg" id="status-msg"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="assinatura">
+      <a class="logo" href="#topo" aria-label="Trivo, voltar ao topo">
+        <svg viewBox="0 0 386 104" aria-hidden="true"><g transform="translate(-3.1 -2.5) scale(0.966)" fill="none" stroke-width="22" stroke-linecap="round"><path d="M54 66V93" stroke="#CAF7A6"/><path d="M40.1 42L14.2 27" stroke="#1F9E57"/><path d="M67.9 42L93.8 27" stroke="#5FD068"/></g><g transform="translate(128 0)" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"><path d="M21 20V72a18 18 0 0 0 18 18h3"/><path d="M7 40H39"/><path d="M65 40V90"/><path d="M65 62a22 22 0 0 1 22-22"/><path d="M109 40V90"/><path d="M132 40L155 90L178 40"/><circle cx="225" cy="65" r="26"/></g><g transform="translate(237 15) scale(0.5)" fill="#CAF7A6"><path d="M0 0V24" fill="none" stroke="#CAF7A6" stroke-width="6.5" stroke-linecap="round"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z" transform="rotate(120)"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z" transform="rotate(240)"/></g></svg>
+      </a>
+      <span>Tecnologia bem pensada.</span>
+    </div>
+    <nav aria-label="Rodapé">
+      <a href="portfolio.html">Portfólio</a>
+      <a href="#orcamento">Orçamento</a>
+    </nav>
+    <span>© <span id="ano">2026</span> Trivo</span>
+  </div>
+</footer>
+
+<script>
+/* ===== Configuração do WhatsApp =====
+   O link curto (w.app/trivo) sempre abre com a mensagem padrão do WhatsApp Business
+   e ignora qualquer texto enviado pelo site. Por isso:
+   - Com WHATSAPP_NUMERO preenchido (só dígitos, com DDI e DDD, ex.: "5511999999999"),
+     a conversa abre já com o nome, a empresa e o desafio escritos.
+   - Com ele vazio, o site copia a mensagem completa e abre o link curto; a pessoa só cola e envia. */
+const WHATSAPP_NUMERO = "932731912546"; // o mesmo número para onde o w.app/trivo redireciona
+const WHATSAPP_LINK = "https://w.app/trivo";
+
+/* ----- Padrão "fluxo" do topo ----- */
+(function () {
+  const svg = document.getElementById("fluxo");
+  const g = document.getElementById("fluxo-linha");
+  const cores = ["#1F9E57", "#5FD068", "#CAF7A6"];
+  const NS = "http://www.w3.org/2000/svg";
+  let larguraAnterior = 0;
+
+  function desenhar() {
+    const w = svg.clientWidth, h = svg.clientHeight;
+    if (!w || w === larguraAnterior) return;
+    larguraAnterior = w;
+    const passo = w < 600 ? 40 : 56;                 // avanço horizontal de cada cápsula
+    const sobe = passo * Math.tan(Math.PI / 6);      // eixo de 30° da malha
+    const espaco = passo * 0.18;
+    const traco = w < 600 ? 9 : 12;
+    const n = Math.ceil((w * 0.82) / passo);
+    let x = -passo * 0.4, y = h / 2 + sobe;
+    g.replaceChildren();
+    for (let i = 0; i < n; i++) {
+      const dir = Math.floor(i / 2) % 2 === 0 ? -1 : 1;
+      const dy = dir * sobe;
+      const l = document.createElementNS(NS, "line");
+      l.setAttribute("x1", (x + espaco).toFixed(1));
+      l.setAttribute("y1", (y + dy * espaco / passo).toFixed(1));
+      l.setAttribute("x2", (x + passo - espaco).toFixed(1));
+      l.setAttribute("y2", (y + dy * (passo - espaco) / passo).toFixed(1));
+      l.setAttribute("stroke", cores[Math.min(2, Math.floor((i / n) * 3))]);
+      l.setAttribute("stroke-width", traco);
+      l.style.animationDelay = (i * 35) + "ms";
+      g.appendChild(l);
+      x += passo; y += dy;
+    }
+  }
+  desenhar();
+  let t;
+  window.addEventListener("resize", () => {
+    clearTimeout(t);
+    t = setTimeout(() => { svg.classList.remove("animar"); desenhar(); }, 120);
+  });
+})();
+
+/* ----- Formulário de orçamento → WhatsApp ----- */
+(function () {
+  const form = document.getElementById("form-orcamento");
+  const status = document.getElementById("status");
+  const statusLink = document.getElementById("status-link");
+  const statusTexto = document.getElementById("status-texto");
+  const statusMsg = document.getElementById("status-msg");
+  const botaoCopiar = document.getElementById("status-copiar");
+  const numero = WHATSAPP_NUMERO.replace(/\D/g, "");
+
+  if (numero) {
+    document.getElementById("dica-envio").textContent = "A mensagem abre pronta. Você só confirma o envio.";
+  }
+
+  function copiar(texto) {
+    const reserva = () => {
+      const area = document.createElement("textarea");
+      area.value = texto;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      area.remove();
+      return Promise.resolve(ok);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(texto).then(() => true, reserva);
+    }
+    return reserva();
+  }
+
+  botaoCopiar.addEventListener("click", () => {
+    copiar(statusMsg.textContent).then((ok) => {
+      botaoCopiar.textContent = ok ? "Copiada" : "Selecione o texto abaixo e copie";
+    });
+  });
+
+  function marcar(campo, ok) {
+    const input = document.getElementById(campo);
+    input.setAttribute("aria-invalid", ok ? "false" : "true");
+    document.getElementById(campo + "-erro").hidden = ok;
+    return ok;
+  }
+
+  ["nome", "mensagem"].forEach((id) => {
+    document.getElementById(id).addEventListener("input", (e) => {
+      if (e.target.value.trim()) marcar(id, true);
+    });
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nome = form.nome.value.trim();
+    const empresa = form.empresa.value.trim();
+    const mensagem = form.mensagem.value.trim();
+    const tipo = (form.querySelector('input[name="tipo"]:checked') || {}).value || "Ainda não sei";
+
+    const okNome = marcar("nome", !!nome);
+    const okMsg = marcar("mensagem", !!mensagem);
+    if (!okNome) { form.nome.focus(); return; }
+    if (!okMsg) { form.mensagem.focus(); return; }
+
+    const texto =
+      "Olá, Trivo! Meu nome é " + nome + (empresa ? ", da " + empresa : "") + ".\n" +
+      "Quero um orçamento para: " + tipo + ".\n\n" + mensagem;
+    statusMsg.textContent = texto;
+    botaoCopiar.textContent = "Copiar mensagem";
+    status.hidden = false;
+
+    if (numero) {
+      const url = "https://api.whatsapp.com/send?phone=" + numero + "&text=" + encodeURIComponent(texto);
+      statusLink.href = url;
+      statusTexto.innerHTML = "<strong>Sua mensagem está pronta.</strong>Se o WhatsApp não abriu sozinho, use o link.";
+      window.open(url, "_blank", "noopener");
+      return;
+    }
+
+    statusLink.href = WHATSAPP_LINK;
+    // A cópia começa ainda dentro do clique; só depois a nova aba abre.
+    const copia = copiar(texto);
+    window.open(WHATSAPP_LINK, "_blank", "noopener");
+    copia.then((ok) => {
+      statusTexto.innerHTML = ok
+        ? "<strong>Mensagem copiada.</strong>No WhatsApp, apague o texto padrão, cole a sua mensagem e envie."
+        : "<strong>Copie a mensagem abaixo.</strong>Depois cole no WhatsApp e envie.";
+      if (ok) botaoCopiar.textContent = "Copiada";
+    });
+  });
+})();
+
+try { document.getElementById("ano").textContent = new Date().getFullYear(); } catch (e) {}
+</script>
+</body>
+</html>

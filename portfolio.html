@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portfólio Trivo</title>
+<meta name="description" content="Todos os projetos da Trivo em um só lugar.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@600;700;800&display=swap">
+<style>
+/* Layout: página de links (estilo "link na bio"), uma coluna estreita no escuro.
+   Cada projeto é uma cápsula clicável; a lista vem do array PROJETOS no fim do arquivo. */
+:root {
+  --preto: #0B0D0C;
+  --branco: #FFFFFF;
+  --verde: #5FD068;
+  --verde-profundo: #1F9E57;
+  --verde-broto: #CAF7A6;
+  --grafite: #181B19;
+  --cinza-400: #9AA19C;
+  --linha: #2A2F2C;
+
+  --f-display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --fs-h1: 2rem;
+  --fs-body: 1rem;
+  --fs-small: 0.8125rem;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0; background: var(--preto); color: var(--branco);
+  font-family: var(--f-body); font-size: var(--fs-body); line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  padding-inline: 16px;
+}
+a { color: inherit; }
+p { margin: 0; }
+
+.pagina {
+  max-width: 520px; margin-inline: auto;
+  padding-block: clamp(48px, 9vw, 88px) 40px;
+  display: grid; gap: 40px;
+}
+
+.topo { display: grid; justify-items: center; text-align: center; gap: 14px; }
+.topo .logo { display: inline-flex; padding: 8px; border-radius: 12px; }
+.topo .logo svg { width: 116px; height: auto; display: block; }
+.topo .logo:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
+.label {
+  font-family: var(--f-mono); font-size: var(--fs-small); font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--cinza-400);
+}
+h1 { font-family: var(--f-display); font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin: 0; }
+.topo p:not(.label) { color: var(--cinza-400); max-width: 36ch; }
+
+.grupo { display: grid; gap: 12px; }
+.grupo > .label { padding-left: 4px; }
+
+.lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.projeto {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px;
+  text-decoration: none; background: var(--grafite); border: 1px solid var(--linha);
+  border-radius: 999px; padding: 14px 22px 14px 18px;
+  transition: border-color .2s, transform .2s;
+}
+.projeto:hover { border-color: var(--cinza-400); }
+.projeto:focus-visible { outline: 2px solid var(--verde); outline-offset: 3px; }
+.projeto .cap { width: 10px; height: 26px; border-radius: 999px; }
+.projeto .texto { display: grid; min-width: 0; }
+.projeto .nome { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.projeto .tipo { font-family: var(--f-mono); font-size: var(--fs-small); color: var(--cinza-400); letter-spacing: 0.04em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.projeto svg { width: 18px; height: 18px; color: var(--cinza-400); transition: transform .2s, color .2s; }
+.projeto:hover svg { transform: translate(2px, -2px); color: var(--verde); }
+
+.vazio {
+  border: 1.5px dashed var(--linha); border-radius: 28px;
+  padding: 28px 24px; display: grid; justify-items: center; gap: 14px; text-align: center;
+}
+.vazio .caps { display: flex; gap: 6px; }
+.vazio .caps span { width: 10px; height: 26px; border-radius: 999px; }
+.vazio strong { font-weight: 600; }
+.vazio p { color: var(--cinza-400); max-width: 34ch; }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-weight: 600; text-decoration: none; line-height: 1;
+  padding: 18px 24px; border-radius: 999px; border: 1.5px solid transparent;
+  transition: background-color .2s, border-color .2s;
+}
+.btn:focus-visible { outline: 2px solid var(--verde); outline-offset: 3px; }
+.btn svg { width: 18px; height: 18px; }
+.btn-primary { background: var(--verde); color: var(--preto); }
+.btn-primary:hover { background: var(--verde-broto); }
+.btn-ghost { border-color: var(--linha); }
+.btn-ghost:hover { border-color: var(--cinza-400); }
+
+footer { text-align: center; color: var(--cinza-400); font-size: var(--fs-small); padding-top: 8px; }
+
+@media (prefers-reduced-motion: reduce) { .projeto, .projeto svg, .btn { transition: none; } }
+</style>
+</head>
+<body>
+<main class="pagina">
+
+  <header class="topo">
+    <a class="logo" href="index.html" aria-label="Trivo, ir para o site">
+      <svg viewBox="0 0 258 300" aria-hidden="true"><g transform="translate(37.2 -23.2) scale(1.7)" fill="none" stroke-width="22" stroke-linecap="round"><path d="M54 66V93" stroke="#CAF7A6"/><path d="M40.1 42L14.2 27" stroke="#1F9E57"/><path d="M67.9 42L93.8 27" stroke="#5FD068"/></g><g transform="translate(0 200)" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"><path d="M21 20V72a18 18 0 0 0 18 18h3"/><path d="M7 40H39"/><path d="M65 40V90"/><path d="M65 62a22 22 0 0 1 22-22"/><path d="M109 40V90"/><path d="M132 40L155 90L178 40"/><circle cx="225" cy="65" r="26"/></g><g transform="translate(109 215) scale(0.5)" fill="#CAF7A6"><path d="M0 0V24" fill="none" stroke="#CAF7A6" stroke-width="6.5" stroke-linecap="round"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z" transform="rotate(120)"/><path d="M0 0L-13.74 -10.43A9.5 9.5 0 1 1 0 -23.12A9.5 9.5 0 1 1 13.74 -10.43Z" transform="rotate(240)"/></g></svg>
+    </a>
+    <p class="label">Portfólio</p>
+    <h1>Nossos projetos</h1>
+    <p>Tudo o que a Trivo já colocou no ar, em um só lugar.</p>
+  </header>
+
+  <section class="grupo" aria-labelledby="projetos-titulo">
+    <p class="label" id="projetos-titulo">Projetos</p>
+    <ul class="lista" id="lista"></ul>
+    <div class="vazio" id="vazio" hidden>
+      <div class="caps" aria-hidden="true">
+        <span style="background:#1F9E57"></span><span style="background:#5FD068"></span><span style="background:#CAF7A6"></span>
+      </div>
+      <strong>Os primeiros projetos chegam em breve.</strong>
+      <p>Enquanto isso, conte o que você precisa. O seu pode ser um dos primeiros desta lista.</p>
+    </div>
+  </section>
+
+  <section class="grupo" aria-label="Fale com a Trivo">
+    <a class="btn btn-primary" href="index.html#orcamento">Pedir orçamento
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <a class="btn btn-ghost" href="index.html">Conhecer a Trivo</a>
+  </section>
+
+  <footer>Trivo · Tecnologia bem pensada.</footer>
+</main>
+
+<script>
+/* ===== Projetos =====
+   Para publicar um projeto, adicione um item abaixo. A ordem aqui é a ordem na página.
+   tipo: "Sistema", "Site", "Landing page", "Automação" ou "Aplicação web".
+   Exemplo:
+   { nome: "Nome do cliente", tipo: "Site", url: "https://exemplo.com.br" },
+*/
+const PROJETOS = [
+];
+
+(function () {
+  const cores = {
+    "Sistema": "#1F9E57",
+    "Aplicação web": "#1F9E57",
+    "Automação": "#5FD068",
+    "Site": "#CAF7A6",
+    "Landing page": "#CAF7A6"
+  };
+  const lista = document.getElementById("lista");
+  const vazio = document.getElementById("vazio");
+
+  if (!PROJETOS.length) { vazio.hidden = false; return; }
+
+  PROJETOS.forEach((p) => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.className = "projeto";
+    a.href = p.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+
+    const cap = document.createElement("span");
+    cap.className = "cap";
+    cap.style.background = cores[p.tipo] || "#5FD068";
+
+    const texto = document.createElement("span");
+    texto.className = "texto";
+    const nome = document.createElement("span");
+    nome.className = "nome";
+    nome.textContent = p.nome;
+    const tipo = document.createElement("span");
+    tipo.className = "tipo";
+    tipo.textContent = p.tipo || "";
+    texto.append(nome, tipo);
+
+    a.append(cap, texto);
+    a.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>');
+    li.appendChild(a);
+    lista.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>
